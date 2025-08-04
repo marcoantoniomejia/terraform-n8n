@@ -37,6 +37,14 @@ terraform-n8n/
 │       ├── main.tf
 │       ├── variables.tf
 │       └── outputs.tf
+│   └── artifact_registry/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+│   └── gke_service_account/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
 │
 ├── .gitignore
 └── README.md

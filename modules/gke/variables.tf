@@ -72,3 +72,21 @@ variable "node_locations" {
   type        = list(string)
   default     = null
 }
+
+variable "logging_service" {
+  description = "The logging service to use. 'logging.googleapis.com/kubernetes' is recommended for GKE."
+  type        = string
+  default     = "logging.googleapis.com/kubernetes"
+}
+
+variable "monitoring_service" {
+  description = "The monitoring service to use. 'monitoring.googleapis.com/kubernetes' is recommended for GKE."
+  type        = string
+  default     = "monitoring.googleapis.com/kubernetes"
+}
+
+variable "node_service_account_email" {
+  description = "The email of the service account to be used by the GKE nodes."
+  type        = string
+  default     = null # Permite que GKE use la SA por defecto si no se especifica
+}
