@@ -14,11 +14,13 @@ terraform-n8n/
 │   ├── dev/
 │   │   ├── main.tf
 │   │   ├── variables.tf
+│   │   ├── outputs.tf
 │   │   ├── terraform.tfvars
 │   │   └── backend.tf
 │   └── prod/
 │       ├── main.tf
 │       ├── variables.tf
+│       ├── outputs.tf
 │       ├── terraform.tfvars
 │       └── backend.tf
 │
@@ -27,7 +29,11 @@ terraform-n8n/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
-│   └── network/
+│   ├── persistent_disk/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+│   └── regional_persistent_disk/
 │       ├── main.tf
 │       ├── variables.tf
 │       └── outputs.tf

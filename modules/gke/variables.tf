@@ -36,3 +36,39 @@ variable "initial_node_count" {
   type        = number
   default     = 2
 }
+
+variable "enable_autoscaling" {
+  description = "Si es true, habilita el autoscaling para el node pool."
+  type        = bool
+  default     = false
+}
+
+variable "min_node_count" {
+  description = "Número mínimo de nodos para el autoscaling."
+  type        = number
+  default     = 1
+}
+
+variable "max_node_count" {
+  description = "Número máximo de nodos para el autoscaling."
+  type        = number
+  default     = 3
+}
+
+variable "disk_size_gb" {
+  description = "Tamaño del disco de arranque de los nodos en GB."
+  type        = number
+  default     = 30
+}
+
+variable "disk_type" {
+  description = "Tipo de disco de arranque. Puede ser 'pd-standard' o 'pd-ssd'."
+  type        = string
+  default     = "pd-standard"
+}
+
+variable "node_locations" {
+  description = "The list of zones in which the node pool's nodes should be created. Used for regional clusters."
+  type        = list(string)
+  default     = null
+}

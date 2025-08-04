@@ -10,3 +10,9 @@ variable "gcp_region" {
   type        = string
   default     = "us-central1"
 }
+
+variable "gcp_replica_zones" {
+  description = "A list of two zones for regional disk replication."
+  type        = list(string)
+  default     = ["us-central1-a", "us-central1-b"]
+}
