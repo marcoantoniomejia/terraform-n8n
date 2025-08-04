@@ -2,7 +2,7 @@
 
 terraform {
   backend "gcs" {
-    bucket = "tu-bucket-para-tfstate" # ¡Usa el mismo bucket que en dev!
+    bucket = "tfstate-bucket-n8n-infra-unico" # <-- REEMPLAZA ESTO con el nombre de tu bucket
     prefix = "gke/prod"               # Un prefijo diferente para aislar el estado de prod
   }
 }
