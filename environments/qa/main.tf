@@ -28,25 +28,21 @@ data "google_compute_subnet" "control_plane_subnet" {
   region  = var.gcp_region
 }
 
-# Ejemplo de un módulo de GKE que usa las variables de Shared VPC
+# Módulo de GKE que usa las variables de Shared VPC para el entorno de QA
 module "gke_cluster" {
-  # La ruta al módulo puede variar según tu estructura
   source = "../../modules/gke_cluster"
 
   project_id = var.gcp_project_id
-  name       = "gke-n8n-cluster-qa"
+  name       = "gke-n8n-cluster-qa" # Nombre específico para QA
   location   = var.gcp_region
 
   # --- Configuración de Red para Shared VPC ---
   network_project_id = var.gke_network_project_id
   subnetwork         = var.gke_node_pool_subnet
 
-  # Configuración para un clúster privado, que es una mejor práctica
   private_cluster_config = {
     enable_private_endpoint = true
     enable_private_nodes    = true
     master_ipv4_cidr_block  = data.google_compute_subnet.control_plane_subnet.ip_cidr_range
   }
-
-  # Aquí irían otras configuraciones del clúster...
 }
