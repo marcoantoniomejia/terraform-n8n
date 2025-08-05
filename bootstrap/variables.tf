@@ -8,5 +8,5 @@ variable "gcp_project_id" {
 variable "gcp_region" {
   description = "La región donde se creará el bucket de backend."
   type        = string
-  default     = "US-CENTRAL1"
+  default     = "us-west2"
 }
