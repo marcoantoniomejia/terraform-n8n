@@ -1,11 +1,6 @@
-# environments/dev/outputs.tf
+# c:\Users\marmejia\Documents\Desarrollo\terraform-n8n\terraform-n8n\environments\dev\outputs.tf
 
-output "n8napp_disk_name_dev" {
-  description = "Name of the regional persistent disk for n8n application data."
-  value       = module.n8napp_disk_dev.name
-}
-
-output "psgdata_disk_name_dev" {
-  description = "Name of the regional persistent disk for PostgreSQL data."
-  value       = module.psgdata_disk_dev.name
+output "gke_cluster_name_dev" {
+  description = "Name of the GKE cluster for the Dev environment."
+  value       = module.gke_cluster.cluster_name
 }

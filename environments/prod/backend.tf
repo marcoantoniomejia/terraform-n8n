@@ -1,8 +1,9 @@
-# environments/prod/backend.tf
+# c:\Users\marmejia\Documents\Desarrollo\terraform-n8n\terraform-n8n\environments\prd\backend.tf
 
 terraform {
   backend "gcs" {
-    bucket = "tfstate-bucket-n8n-infra-unico" # <-- REEMPLAZA ESTO con el nombre de tu bucket
-    prefix = "gke/prod"               # Un prefijo diferente para aislar el estado de prod
+    # REEMPLAZA ESTO con el nombre del bucket generado por 'bootstrap' para el entorno de prod.
+    # Ejemplo: bucket = "gcs-tfstate-psa-td-corp-transf-n8n-prd"
+    prefix = "prd/gke"
   }
 }

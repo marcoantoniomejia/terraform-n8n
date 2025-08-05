@@ -2,10 +2,8 @@
 
 terraform {
   backend "gcs" {
-    # Este nombre de bucket debe ser el que se genera en el paso de 'bootstrap'.
-    # Ejemplo: "tfstate-gcp-project-12345"
-    bucket = "NOMBRE_DEL_BUCKET_DE_TFSTATE"
-    # El prefijo organiza los tfstate de cada entorno en "carpetas" dentro del bucket.
-    prefix = "dev"
+    # REEMPLAZA ESTO con el nombre del bucket generado por 'bootstrap' para el entorno de dev.
+    # Ejemplo: bucket = "gcs-tfstate-psa-td-corp-transf-n8n-dev"
+    prefix = "dev/gke"
   }
 }

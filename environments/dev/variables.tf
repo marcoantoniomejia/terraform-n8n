@@ -1,18 +1,27 @@
-# environments/dev/variables.tf
+# c:\Users\marmejia\Documents\Desarrollo\terraform-n8n\terraform-n8n\environments\dev\variables.tf
 
 variable "gcp_project_id" {
-  description = "The GCP project ID to deploy resources into."
+  description = "El ID del proyecto de Google Cloud (Service Project) donde se desplegará el clúster GKE."
   type        = string
 }
 
 variable "gcp_region" {
-  description = "The GCP region for the resources."
+  description = "La región donde se desplegarán los recursos."
   type        = string
-  default     = "us-central1"
+  default     = "US-CENTRAL1"
 }
 
-variable "gcp_replica_zones" {
-  description = "A list of two zones for regional disk replication."
-  type        = list(string)
-  default     = ["us-central1-a", "us-central1-b"]
+variable "gke_network_project_id" {
+  description = "El ID del proyecto Host de la VPC compartida."
+  type        = string
+}
+
+variable "gke_node_pool_subnet" {
+  description = "El nombre de la subred en la VPC compartida para los nodos del clúster GKE."
+  type        = string
+}
+
+variable "gke_control_plane_subnet" {
+  description = "El nombre de la subred en la VPC compartida para el plano de control del clúster GKE (debe ser /28)."
+  type        = string
 }
