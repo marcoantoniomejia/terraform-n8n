@@ -1,8 +1,7 @@
-# environments/qa/backend.tf
-
 terraform {
   backend "gcs" {
-    bucket = "tfstate-bucket-n8n-infra-unico" # <-- REEMPLAZA ESTO con el nombre de tu bucket
-    prefix = "gke/qa"                 # Un prefijo diferente para aislar el estado de QA
+    # REEMPLAZA ESTO con el nombre del bucket generado por 'bootstrap' para el entorno de qa.
+    # Ejemplo: bucket = "gcs-tfstate-psa-td-corp-transf-n8n-qa"
+    prefix = "qa/gke"
   }
 }

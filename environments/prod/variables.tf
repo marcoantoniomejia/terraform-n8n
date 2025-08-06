@@ -26,14 +26,64 @@ variable "gke_control_plane_subnet" {
   type        = string
 }
 
-variable "disk_1_zone" {
-  description = "La zona de disponibilidad para el primer disco persistente."
+variable "artifact_registry_repository_name" {
+  description = "Nombre para el repositorio de Artifact Registry."
   type        = string
-  default     = "us-west2-a"
 }
 
-variable "disk_2_zone" {
-  description = "La zona de disponibilidad para el segundo disco persistente."
+variable "app_disk_name" {
+  description = "Nombre para el disco de la aplicación (n8n)."
   type        = string
-  default     = "us-west2-b"
+}
+
+variable "app_disk_size" {
+  description = "Tamaño en GB para el disco de la aplicación."
+  type        = number
+}
+
+variable "db_disk_name" {
+  description = "Nombre para el disco de la base de datos (PostgreSQL)."
+  type        = string
+}
+
+variable "db_disk_size" {
+  description = "Tamaño en GB para el disco de la base de datos."
+  type        = number
+}
+
+variable "regional_disk_type" {
+  description = "Tipo de disco regional a utilizar (ej. pd-regional-ssd)."
+  type        = string
+}
+
+variable "regional_disk_replica_zones" {
+  description = "Lista de dos zonas para la replicación del disco regional."
+  type        = list(string)
+}
+
+# --- Configuración del Node Pool de GKE ---
+
+variable "gke_machine_type" {
+  description = "El tipo de máquina para los nodos del clúster GKE."
+  type        = string
+}
+
+variable "gke_min_node_count" {
+  description = "El número mínimo de nodos para el autoscaling del clúster."
+  type        = number
+}
+
+variable "gke_max_node_count" {
+  description = "El número máximo de nodos para el autoscaling del clúster."
+  type        = number
+}
+
+variable "gke_disk_type" {
+  description = "El tipo de disco de arranque para los nodos (ej. pd-standard, pd-ssd)."
+  type        = string
+}
+
+variable "gke_disk_size_gb" {
+  description = "El tamaño en GB del disco de arranque para los nodos."
+  type        = number
 }
