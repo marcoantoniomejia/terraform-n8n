@@ -17,11 +17,12 @@ terraform {
 
 provider "google" {
   project = var.gcp_project_id
+  region  = var.gcp_region
 }
 
 module "gcs_backend_bucket" {
   source = "../modules/gcs_backend"
 
   project_id = var.gcp_project_id
-  location   = var.gcs_bucket_location
+  location   = var.gcp_region
 }

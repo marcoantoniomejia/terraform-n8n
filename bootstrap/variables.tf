@@ -5,8 +5,8 @@ variable "gcp_project_id" {
   type        = string
 }
 
-variable "gcs_bucket_location" {
-  description = "La ubicación (región, multirregión, etc.) donde se creará el bucket de backend."
+variable "gcp_region" {
+  description = "La región donde se creará el bucket de backend."
   type        = string
   default     = "us-west2"
 }

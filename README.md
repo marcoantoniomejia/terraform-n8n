@@ -16,21 +16,29 @@ La infraestructura de cada entorno, gestionada a través de módulos de Terrafor
 
 ---
 
-## Requisitos Previos
+## Primeros Pasos (Usando Google Cloud Shell)
 
-1.  **Terraform CLI**: Asegúrate de tener Terraform instalado (Descargar aquí).
-2.  **Google Cloud SDK**: Instala y configura `gcloud` (Instrucciones aquí).
-3.  **Autenticación**: Autentícate en GCP. El método más sencillo para un entorno local es:
+Se recomienda encarecidamente utilizar **Google Cloud Shell** para ejecutar este código, ya que viene con Terraform, `gcloud` y otras herramientas necesarias preinstaladas y configuradas.
+
+1.  **Abrir Cloud Shell**: En la consola de Google Cloud, haz clic en el icono `>_` "Activar Cloud Shell" en la parte superior derecha.
+
+2.  **Clonar el Repositorio**: Ejecuta el siguiente comando en tu terminal de Cloud Shell para clonar este proyecto:
     ```sh
-    gcloud auth application-default login
+    git clone https://github.com/marcoantoniomejia/terraform-n8n.git
     ```
-4.  **Permisos**: La cuenta o usuario que ejecute Terraform debe tener los permisos necesarios en los proyectos de GCP (tanto en el proyecto Host de la VPC como en los proyectos de servicio de cada entorno).
+
+3.  **Navegar al Directorio del Proyecto**:
+    ```sh
+    cd terraform-n8n
+    ```
+
+4.  **Permisos**: La cuenta de usuario con la que estás autenticado en Cloud Shell debe tener los permisos necesarios en los proyectos de GCP (tanto en el proyecto Host de la VPC como en los proyectos de servicio de cada entorno).
 
 ---
 
-## Paso 0: Configuración Inicial Obligatoria
+## Paso 0: Configuración de Variables
 
-Antes de desplegar, debes configurar las variables específicas de tu entorno.
+Antes de desplegar, debes configurar las variables específicas de tu entorno. Puedes usar el editor de código integrado de Cloud Shell (`code .`) para modificar los archivos desde la terminal.
 
 1.  **ID del Proyecto Host de la VPC**: En los archivos `bootstrap/dev.tfvars`, `bootstrap/qa.tfvars` y `bootstrap/prd.tfvars`, reemplaza el valor de `gke_network_project_id` de `"tu-gcp-host-project-id-aqui"` por el ID real de tu proyecto Host de la VPC.
 
@@ -38,9 +46,9 @@ Antes de desplegar, debes configurar las variables específicas de tu entorno.
 
 ---
 
-## Proceso de Despliegue
+## Proceso de Despliegue (Desde Cloud Shell)
 
-El despliegue se realiza en dos fases principales para cada entorno:
+El despliegue se realiza en dos fases principales para cada entorno, directamente desde la terminal de Cloud Shell.
 1.  **Bootstrap**: Crear el backend para el estado de Terraform.
 2.  **Despliegue del Entorno**: Crear la infraestructura de la aplicación (GKE, discos, etc.).
 
@@ -48,11 +56,14 @@ El despliegue se realiza en dos fases principales para cada entorno:
 
 Este paso se ejecuta una vez por entorno para crear el bucket de GCS que guardará el estado.
 
+**Asegúrate de estar en el directorio raíz del proyecto (`terraform-n8n`) antes de continuar.**
+
 ```sh
 # Navega al directorio de bootstrap
 cd bootstrap
 
 # Inicializa Terraform para este directorio
+# Terraform usará tus credenciales activas de gcloud en Cloud Shell
 terraform init
 ```
 
