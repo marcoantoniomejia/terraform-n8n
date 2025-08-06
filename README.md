@@ -56,29 +56,39 @@ El despliegue se realiza en dos fases principales para cada entorno, directament
 
 Este paso se ejecuta una vez por entorno para crear el bucket de GCS que guardará el estado.
 
+> **Importante**: Usamos **workspaces de Terraform** para mantener los estados de `dev`, `qa` y `prd` completamente separados y evitar que un entorno afecte a otro.
+
 **Asegúrate de estar en el directorio raíz del proyecto (`terraform-n8n`) antes de continuar.**
 
 ```sh
 # Navega al directorio de bootstrap
 cd bootstrap
 
-# Inicializa Terraform para este directorio
-# Terraform usará tus credenciales activas de gcloud en Cloud Shell
+# Inicializa Terraform. Esto solo se hace una vez por directorio.
 terraform init
+
+# Crea un workspace para cada entorno. Esto también se hace solo una vez.
+terraform workspace new dev
+terraform workspace new qa
+terraform workspace new prd
 ```
 
 **Para crear el backend de Desarrollo (dev):**
 ```sh
+# Asegúrate de estar en el workspace correcto
+terraform workspace select dev
 terraform apply -var-file="dev.tfvars"
 ```
 
 **Para crear el backend de Pruebas (qa):**
 ```sh
+terraform workspace select qa
 terraform apply -var-file="qa.tfvars"
 ```
 
 **Para crear el backend de Producción (prd):**
 ```sh
+terraform workspace select prd
 terraform apply -var-file="prd.tfvars"
 ```
 
