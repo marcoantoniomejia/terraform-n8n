@@ -12,7 +12,7 @@ La infraestructura de cada entorno, gestionada a través de módulos de Terrafor
 
 - `bootstrap/`: Contiene la configuración para crear el bucket de GCS que almacenará el estado de Terraform (`.tfstate`) para cada entorno.
 - `environments/`: Contiene la configuración de la infraestructura principal para cada entorno (`dev`, `qa`, `prd`).
-- `modules/`: (No mostrado) Contiene los módulos reutilizables de Terraform para GKE, discos, etc.
+- `modules/`: Contiene los módulos reutilizables de Terraform para GKE, discos, etc. Cada módulo incluye su propio archivo `README.md` que detalla su funcionamiento, variables de entrada y salidas.
 
 ---
 
