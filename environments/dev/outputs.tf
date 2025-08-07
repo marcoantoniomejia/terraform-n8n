@@ -7,7 +7,7 @@ output "gke_cluster_name" {
 
 output "artifact_registry_repository_name" {
   description = "Nombre completo del repositorio de Artifact Registry."
-  value       = module.artifact_registry.name
+  value       = module.artifact_registry.repository_id
 }
 
 output "app_disk_self_link" {

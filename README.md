@@ -82,13 +82,11 @@ terraform apply -var-file="dev.tfvars"
 
 **Para crear el backend de Pruebas (qa):**
 ```sh
-terraform workspace select qa
 terraform apply -var-file="qa.tfvars"
 ```
 
 **Para crear el backend de Producción (prd):**
 ```sh
-terraform workspace select prd
 terraform apply -var-file="prd.tfvars"
 ```
 

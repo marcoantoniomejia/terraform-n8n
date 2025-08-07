@@ -4,7 +4,7 @@ terraform {
   # Durante la fase de bootstrap, el estado se gestiona localmente.
   # Este es el único lugar donde se usará un backend local.
   backend "local" {
-    project_ids={
+    project_ids = {
       "dev"="psa-td-corp-transf-n8n-dev",
       "qa"="psa-td-corp-transf-n8n-qa",
       "prd"="psa-td-corp-transf-n8n-prd"

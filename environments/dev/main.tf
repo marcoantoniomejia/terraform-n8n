@@ -68,7 +68,7 @@ module "artifact_registry" {
   source        = "../../modules/artifact_registry"
   project_id    = var.gcp_project_id
   location      = var.gcp_region
-  repository_id = var.artifact_registry_repository_name
+  repository_name = var.artifact_registry_repository_name
   depends_on    = [google_project_service.artifactregistry]
 }
 
