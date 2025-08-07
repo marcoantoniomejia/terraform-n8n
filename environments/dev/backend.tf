@@ -4,6 +4,7 @@ terraform {
   backend "gcs" {
     # REEMPLAZA ESTO con el nombre del bucket generado por 'bootstrap' para el entorno de dev.
     # Ejemplo: bucket = "gcs-tfstate-psa-td-corp-transf-n8n-dev"
-    prefix = "dev/gke"
+    bucket = "gcs-tfstate-psa-td-corp-transf-n8n-dev"
+    prefix = "${terraform.workspace}"
   }
 }

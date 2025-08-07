@@ -4,6 +4,11 @@ terraform {
   # Durante la fase de bootstrap, el estado se gestiona localmente.
   # Este es el único lugar donde se usará un backend local.
   backend "local" {
+    project_ids={
+      "dev"="psa-td-corp-transf-n8n-dev",
+      "qa"="psa-td-corp-transf-n8n-qa",
+      "prd"="psa-td-corp-transf-n8n-prd"
+    }
     path = "terraform.tfstate"
   }
 
@@ -16,7 +21,7 @@ terraform {
 }
 
 provider "google" {
-  project = var.gcp_project_id
+  project = local.project_ids[terraform.workspace]
   region  = var.gcp_region
 }
 
