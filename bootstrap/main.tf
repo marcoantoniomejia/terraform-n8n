@@ -3,13 +3,6 @@
 terraform {
   # Durante la fase de bootstrap, el estado se gestiona localmente.
   # Este es el único lugar donde se usará un backend local.
-  locals {
-    project_ids = {
-      "dev" = "psa-td-corp-transf-n8n-dev",
-      "qa"  = "psa-td-corp-transf-n8n-qa",
-      "prd" = "psa-td-corp-transf-n8n-prd"
-    }
-  }
   backend "local" {
     path = "terraform.tfstate"
   }
@@ -19,6 +12,14 @@ terraform {
       source  = "hashicorp/google"
       version = ">= 4.50.0" # Required for GKE and other resources
     }
+  }
+}
+
+locals {
+  project_ids = {
+    "dev" = "psa-td-corp-transf-n8n-dev",
+    "qa"  = "psa-td-corp-transf-n8n-qa",
+    "prd" = "psa-td-corp-transf-n8n-prd"
   }
 }
 
