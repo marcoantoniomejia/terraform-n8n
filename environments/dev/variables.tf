@@ -1,6 +1,6 @@
 # c:\Users\marmejia\Documents\Desarrollo\terraform-n8n\terraform-n8n\environments\dev\variables.tf
 
-variable "gcp_project_id" {
+variable "gcp_project_idXXX" {
   description = "El ID del proyecto de Google Cloud (Service Project) donde se desplegará el clúster GKE."
   type        = string
 }
