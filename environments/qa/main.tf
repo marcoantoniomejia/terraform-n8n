@@ -28,31 +28,22 @@ module "gke_cluster" {
   source = "../../modules/gke_cluster"
 
   project_id = var.gcp_project_id
-  name       = "gke-n8n-cluster-qa" # Nombre específico para QA
-  location   = var.gcp_region
+  name_prefix = "gke-n8n-cluster-qa" # Nombre específico para QA
+  region     = var.gcp_region
 
   # --- Configuración de Red para Shared VPC ---
-  network_project_id = var.gke_network_project_id
-  subnetwork         = var.gke_node_pool_subnet
-
-  private_cluster_config = {
-    enable_private_endpoint = true
-    enable_private_nodes    = true
-    master_ipv4_cidr_block  = data.google_compute_subnet.control_plane_subnet.ip_cidr_range
-  }
+  network_name = var.gke_network_project_id
+  subnetwork_name = var.gke_node_pool_subnet
 
   # --- Configuración del Node Pool ---
-  node_config = {
-    machine_type = var.gke_machine_type
-    disk_type    = var.gke_disk_type
-    disk_size_gb = var.gke_disk_size_gb
-  }
+  machine_type = var.gke_machine_type
+  disk_type    = var.gke_disk_type
+  disk_size_gb = var.gke_disk_size_gb
 
   # --- Configuración de Autoescalado ---
-  autoscaling = {
-    min_node_count = var.gke_min_node_count
-    max_node_count = var.gke_max_node_count
-  }
+  enable_autoscaling = true
+  min_node_count = var.gke_min_node_count
+  max_node_count = var.gke_max_node_count
 }
 
 # --- Recursos Adicionales ---

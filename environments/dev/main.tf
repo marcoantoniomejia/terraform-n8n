@@ -28,31 +28,22 @@ module "gke_cluster" {
   source = "../../modules/gke_cluster"
 
   project_id = var.gcp_project_id
-  name       = "gke-n8n-cluster-dev" # Nombre específico para Dev
-  location   = var.gcp_region
+  # The 'location' attribute is not expected here. It should be passed to the module directly if needed.
+  # location   = var.gcp_region
+  region = var.gcp_region
 
+  name_prefix = "dev" # Hardcoded prefix for dev environment
   # --- Configuración de Red para Shared VPC ---
-  network_project_id = var.gke_network_project_id
-  subnetwork         = var.gke_node_pool_subnet
+  network_name = var.gke_network_project_id # This should be the network name, not project ID
+  subnetwork_name = var.gke_node_pool_subnet
 
-  private_cluster_config = {
-    enable_private_endpoint = true
-    enable_private_nodes    = true
-    master_ipv4_cidr_block  = data.google_compute_subnet.control_plane_subnet.ip_cidr_range
-  }
-
-  # --- Configuración del Node Pool ---
-  node_config = {
-    machine_type = var.gke_machine_type
-    disk_type    = var.gke_disk_type
-    disk_size_gb = var.gke_disk_size_gb
-  }
-
-  # --- Configuración de Autoescalado ---
-  autoscaling = {
-    min_node_count = var.gke_min_node_count
-    max_node_count = var.gke_max_node_count
-  }
+  # --- Configuración del Node Pool (pasado directamente como variables del módulo) ---
+  machine_type = var.gke_machine_type
+  disk_type    = var.gke_disk_type
+  disk_size_gb = var.gke_disk_size_gb
+  min_node_count = var.gke_min_node_count
+  max_node_count = var.gke_max_node_count
+  enable_autoscaling = true # Habilitar autoscaling ya que se especifican min/max
 }
 
 # --- Recursos Adicionales ---
