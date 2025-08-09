@@ -5,6 +5,6 @@ terraform {
     # REEMPLAZA ESTO con el nombre del bucket generado por 'bootstrap' para el entorno de prod.
     # Ejemplo: bucket = "gcs-tfstate-psa-td-corp-transf-n8n-prd"
     bucket = "gcs-tfstate-psa-td-corp-transf-n8n-prd"
-    prefix = "${terraform.workspace}"
+    prefix = "prd"
   }
 }
