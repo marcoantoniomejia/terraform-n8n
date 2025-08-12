@@ -48,89 +48,43 @@ Antes de desplegar, debes configurar las variables específicas de tu entorno. P
 
 ## Proceso de Despliegue (Desde Cloud Shell)
 
-El despliegue se realiza en dos fases principales para cada entorno, directamente desde la terminal de Cloud Shell.
-1.  **Bootstrap**: Crear el backend para el estado de Terraform.
-2.  **Despliegue del Entorno**: Crear la infraestructura de la aplicación (GKE, discos, etc.).
+El despliegue de cada ambiente se realiza de forma independiente, navegando al directorio correspondiente.
 
-### Fase 1: Creación del Backend (Bootstrap)
+**IMPORTANTE sobre Workspaces:** Este proyecto está diseñado para usar **directorios por ambiente**, no workspaces de Terraform. Cada ambiente (`dev`, `qa`, `prod`) tiene su propio backend configurado, lo que garantiza el aislamiento de su estado. **No es necesario usar `terraform workspace new`**. Asegúrate siempre de estar en el workspace `default` para evitar conflictos.
 
-Este paso se ejecuta una vez por entorno para crear el bucket de GCS que guardará el estado.
-
-> **Importante**: Usamos **workspaces de Terraform** para mantener los estados de `dev`, `qa` y `prd` completamente separados y evitar que un entorno afecte a otro.
-
-**Asegúrate de estar en el directorio raíz del proyecto (`terraform-n8n`) antes de continuar.**
-
-```sh
-# Navega al directorio de bootstrap
-cd bootstrap
-
-# Inicializa Terraform. Esto solo se hace una vez por directorio.
-terraform init
-
-# Crea un workspace para cada entorno. Esto también se hace solo una vez.
-terraform workspace new dev
-terraform workspace new qa
-terraform workspace new prd
+```bash
+# (Opcional pero recomendado) Verifica que estás en el workspace default
+terraform workspace select default
 ```
 
-**Para crear el backend de Desarrollo (dev):**
-```sh
-# Asegúrate de estar en el workspace correcto
-terraform workspace select dev
-terraform apply -var-file="dev.tfvars"
-```
+---
 
-**Para crear el backend de Pruebas (qa):**
-```sh
-terraform apply -var-file="qa.tfvars"
-```
+### Despliegue de un Ambiente (Ejemplo con `prod`)
 
-**Para crear el backend de Producción (prd):**
-```sh
-terraform apply -var-file="prd.tfvars"
-```
+Sigue estos pasos para desplegar o actualizar cualquier ambiente. Usaremos `prod` como ejemplo.
 
-> **Nota**: Cada `apply` te mostrará como salida el nombre del bucket de GCS que se ha creado. Necesitarás este nombre para el siguiente paso. El nombre suele seguir el patrón `gcs-tfstate-<project_id>`.
-
-### Fase 2: Despliegue de la Infraestructura
-
-Ahora desplegaremos los recursos de cada entorno, en el orden solicitado.
-
-#### Despliegue de Desarrollo (dev)
-
-1.  Navega al directorio del entorno de desarrollo.
-    ```sh
+1.  **Navega al directorio del ambiente.**
+    ```bash
     # Desde la raíz del proyecto
-    cd environments/dev
-    ```
-2.  Inicializa Terraform, conectándolo con el backend remoto que creaste. **Reemplaza `<NOMBRE_DEL_BUCKET_DEV>`** con el nombre del bucket obtenido en la fase de bootstrap.
-    ```sh
-    terraform init -backend-config="bucket=gcs-tfstate-psa-td-corp-transf-n8n-dev"
-    ```
-3.  Planifica y aplica los cambios usando el archivo de variables de `dev`.
-    ```sh
-    terraform plan -var-file="../../bootstrap/dev.tfvars"
-    terraform apply -var-file="../../bootstrap/dev.tfvars"
+    cd environments/prod
     ```
 
-#### Despliegue de Pruebas (qa)
+2.  **Inicializa Terraform.**
+    La primera vez que trabajes en un ambiente, o si cambias los módulos, necesitas inicializar Terraform. Esto conectará Terraform con el backend remoto correcto (definido en `backend.tf`).
+    ```bash
+    terraform init
+    ```
 
-Repite el proceso para QA, usando sus propios archivos y bucket.
-```sh
-# Desde la raíz del proyecto
-cd environments/qa
+3.  **Planifica los cambios.**
+    Ejecuta `terraform plan` para ver los cambios que se aplicarán. Usamos el flag `-var-file` para cargar las variables correctas desde la carpeta `bootstrap`.
+    ```bash
+    terraform plan -var-file="../../bootstrap/prd.tfvars"
+    ```
 
-terraform init -backend-config="bucket=gcs-tfstate-psa-td-corp-transf-n8n-qa"
-terraform apply -var-file="../../bootstrap/qa.tfvars"
-```
+4.  **Aplica los cambios.**
+    Si el plan es correcto, aplica la configuración.
+    ```bash
+    terraform apply -var-file="../../bootstrap/prd.tfvars"
+    ```
 
-#### Despliegue de Producción (prd)
-
-Finalmente, repite el proceso para Producción. **Ten especial cuidado al aplicar cambios en este entorno.**
-```sh
-# Desde la raíz del proyecto
-cd environments/prd
-
-terraform init -backend-config="bucket=gcs-tfstate-psa-td-corp-transf-n8n-prd"
-terraform apply -var-file="../../bootstrap/prd.tfvars"
-```
+**Para trabajar con `dev` o `qa`**, simplemente reemplaza `prod` por `dev` o `qa` en la ruta del directorio y en el nombre del archivo `.tfvars`.

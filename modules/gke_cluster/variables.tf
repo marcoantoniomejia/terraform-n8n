@@ -21,7 +21,7 @@ variable "network_name" {
 }
 
 variable "subnetwork_name" {
-  description = "The name of the subnetwork."
+  description = "The name of the subnetwork for the GKE nodes."
   type        = string
 }
 
@@ -89,4 +89,22 @@ variable "node_service_account_email" {
   description = "The email of the service account to be used by the GKE nodes."
   type        = string
   default     = null # Permite que GKE use la SA por defecto si no se especifica
+}
+
+# --- Variables para Shared VPC y Clúster Privado ---
+
+variable "network_project_id" {
+  description = "El ID del proyecto Host de la VPC compartida. Si es nulo, se asume que la red está en el mismo proyecto que el clúster."
+  type        = string
+  default     = null
+}
+
+variable "private_cluster_config" {
+  description = "Objeto de configuración para crear un clúster privado. Si es nulo, el clúster será público."
+  type = object({
+    enable_private_endpoint = bool
+    enable_private_nodes    = bool
+    master_ipv4_cidr_block  = string
+  })
+  default = null
 }

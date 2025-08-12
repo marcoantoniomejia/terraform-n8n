@@ -26,6 +26,11 @@ variable "gke_control_plane_subnet" {
   type        = string
 }
 
+variable "gke_network_name" {
+  description = "El nombre de la red VPC donde se conectará el clúster GKE."
+  type        = string
+}
+
 variable "artifact_registry_repository_name" {
   description = "Nombre para el repositorio de Artifact Registry."
   type        = string
