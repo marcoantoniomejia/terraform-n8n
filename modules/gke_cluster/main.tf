@@ -9,9 +9,20 @@ resource "google_container_cluster" "primary" {
   logging_service    = var.logging_service
   monitoring_service = var.monitoring_service
 
-  # Como es un proyecto existente, asumimos que la red ya existe.
-  network    = var.network_name
-  subnetwork = var.subnetwork_name
+  # Lógica para Shared VPC: si se provee un network_project_id, se construye la URL completa.
+  # Si no, se asume que la red está en el mismo proyecto.
+  network    = var.network_project_id == null ? var.network_name : "projects/${var.network_project_id}/global/networks/${var.network_name}"
+  subnetwork = var.network_project_id == null ? var.subnetwork_name : "projects/${var.network_project_id}/regions/${var.region}/subnetworks/${var.subnetwork_name}"
+
+  # Configuración de clúster privado (si se proporciona)
+  dynamic "private_cluster_config" {
+    for_each = var.private_cluster_config != null ? [var.private_cluster_config] : []
+    content {
+      enable_private_endpoint = private_cluster_config.value.enable_private_endpoint
+      enable_private_nodes    = private_cluster_config.value.enable_private_nodes
+      master_ipv4_cidr_block  = private_cluster_config.value.master_ipv4_cidr_block
+    }
+  }
 
   initial_node_count = 1
   remove_default_node_pool = true
