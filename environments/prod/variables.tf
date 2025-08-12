@@ -16,6 +16,11 @@ variable "gke_network_project_id" {
   type        = string
 }
 
+variable "gke_network_name" {
+  description = "El nombre de la red VPC donde se conectará el clúster GKE."
+  type        = string
+}
+
 variable "gke_node_pool_subnet" {
   description = "El nombre de la subred en la VPC compartida para los nodos del clúster GKE."
   type        = string

@@ -17,7 +17,7 @@ provider "google" {
 
 # Obtenemos los detalles de la subred del plano de control para extraer su rango CIDR.
 # Google Cloud requiere un rango /28 para el plano de control de GKE.
-data "google_compute_subnet" "control_plane_subnet" {
+data "google_compute_subnetwork" "control_plane_subnet" {
   project = var.gke_network_project_id
   name    = var.gke_control_plane_subnet
   region  = var.gcp_region
@@ -27,26 +27,27 @@ data "google_compute_subnet" "control_plane_subnet" {
 module "gke_cluster" {
   source = "../../modules/gke_cluster"
 
-  project_id = var.gcp_project_id
+  # --- Parámetros del Clúster ---
   name_prefix = "gke-n8n-cluster-prd" # Nombre específico para Prod
-  region   = var.gcp_region
+  project_id  = var.gcp_project_id
+  region      = var.gcp_region
 
-  # --- Configuración de Red para Shared VPC ---
-  network_name = var.gke_network_project_id
-  subnetwork_name = var.gke_node_pool_subnet
+  # --- Configuración de Red (Shared VPC) ---
+  network_project_id = var.gke_network_project_id
+  network_name       = var.gke_network_name
+  subnetwork_name    = var.gke_node_pool_subnet # Subnet para los nodos
 
-  # private_cluster_config = {
-  #   enable_private_endpoint = true
-  #   enable_private_nodes    = true
-  #   master_ipv4_cidr_block  = data.google_compute_subnet.control_plane_subnet.ip_cidr_range
-  # }
+  # --- Configuración de Clúster Privado ---
+  private_cluster_config = {
+    enable_private_endpoint = true
+    enable_private_nodes    = true
+    master_ipv4_cidr_block  = data.google_compute_subnetwork.control_plane_subnet.ip_cidr_range
+  }
 
   # --- Configuración del Node Pool ---
-  machine_type = var.gke_machine_type
-  disk_type    = var.gke_disk_type
-  disk_size_gb = var.gke_disk_size_gb
-
-  # Configuración de Autoescalado
+  machine_type     = var.gke_machine_type
+  disk_type        = var.gke_disk_type
+  disk_size_gb     = var.gke_disk_size_gb
   enable_autoscaling = true
   min_node_count     = var.gke_min_node_count
   max_node_count     = var.gke_max_node_count
