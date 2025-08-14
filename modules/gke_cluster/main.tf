@@ -23,6 +23,16 @@ resource "google_container_cluster" "primary" {
       master_ipv4_cidr_block  = private_cluster_config.value.master_ipv4_cidr_block
     }
   }
+    master_authorized_networks_config {
+    cidr_blocks {
+        display_name = "gke-nodes-subnet"
+        cidr_block   = "172.29.47.0/24"
+       }
+     cidr_blocks {
+        display_name = "management-bastion-host"
+        cidr_block   = "172.29.48.0/28"
+       }
+  }
 
   initial_node_count = 1
   remove_default_node_pool = true
