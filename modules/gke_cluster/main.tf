@@ -23,6 +23,12 @@ resource "google_container_cluster" "primary" {
       master_ipv4_cidr_block  = private_cluster_config.value.master_ipv4_cidr_block
     }
   }
+
+ ip_allocation_policy {
+    cluster_secondary_range_name  = "gke-pods-range-n8n"
+    services_secondary_range_name = "gke-services-range-n8n"
+  }
+
     master_authorized_networks_config {
     cidr_blocks {
         display_name = "gke-nodes-subnet"
@@ -31,7 +37,7 @@ resource "google_container_cluster" "primary" {
      cidr_blocks {
         display_name = "management-bastion-host"
         cidr_block   = "172.29.48.0/28"
-       }
+       }      
   }
 
   initial_node_count = 1
