@@ -1,3 +1,11 @@
+# =================================================================================================
+# Módulo Terraform para crear un bucket en Google Cloud Storage (GCS).
+#
+# Este módulo está diseñado específicamente para crear el bucket que almacenará el estado
+# remoto de Terraform (tfstate). Incluye configuraciones críticas como el versionado
+# y la prevención de destrucción para garantizar la seguridad del estado.
+# =================================================================================================
+
 # c:\Users\marmejia\Documents\Desarrollo\terraform-n8n\terraform-n8n\modules\gcs_backend\main.tf
 
 resource "google_storage_bucket" "tfstate" {

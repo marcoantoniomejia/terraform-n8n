@@ -1,3 +1,13 @@
+# =================================================================================================
+# Módulo Terraform para crear un clúster de Google Kubernetes Engine (GKE).
+#
+# Este módulo provisiona un clúster de GKE con configuraciones avanzadas, incluyendo:
+# - Soporte para clústeres privados.
+# - Conexión a una Shared VPC.
+# - Un node pool con auto-escalado.
+# - Habilitación de las APIs necesarias para GKE.
+# =================================================================================================
+
 # modules/gke/main.tf
 
 resource "google_container_cluster" "primary" {
