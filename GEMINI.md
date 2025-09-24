@@ -14,6 +14,68 @@ Aislamiento de Entornos: Los entornos de desarrollo (dev), control de calidad (q
 
 GCA tiene prohibido sugerir o usar terraform workspace para el aislamiento de entornos. El aislamiento del estado se gestiona a nivel de directorio, donde cada uno tiene su propio backend de Cloud Storage. 🚫
 
+## Estructura de Directorios Estándar
+
+Para mantener la consistencia y la claridad en los proyectos de Terraform, se debe seguir la siguiente estructura de directorios. Esta estructura promueve la separación de responsabilidades y el aislamiento de entornos.
+
+```
+.
+├── bootstrap/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   └── entorno-1.tfvars
+│
+├── environments/
+│   ├── dev/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── backend.tf
+│   │   └── terraform.tfvars
+│   ├── qa/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── backend.tf
+│   │   └── terraform.tfvars
+│   └── prd/
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── backend.tf
+│       └── terraform.tfvars
+│
+├── modules/
+│   ├── mi-modulo-1/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
+│   └── mi-modulo-2/
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── outputs.tf
+│       └── README.md
+│
+├── .gitignore
+└── README.md
+```
+
+### Descripción de Directorios Clave
+
+-   **`/bootstrap`**:
+    -   **Propósito**: Contiene la configuración de Terraform para crear los recursos fundamentales que la propia infraestructura necesita para funcionar, principalmente el **bucket de GCS para el backend remoto**.
+    -   **Backend**: Utiliza un backend `local` ya que se ejecuta antes de que exista el backend remoto.
+    -   **Variables**: Se alimenta de archivos `.tfvars` específicos por entorno (ej. `dev.tfvars`) para crear un bucket por cada uno.
+
+-   **`/environments`**:
+    -   **Propósito**: Es el corazón del proyecto. Contiene un subdirectorio por cada entorno de despliegue (`dev`, `qa`, `prd`).
+    -   **Aislamiento**: Cada subdirectorio es una configuración raíz de Terraform completamente aislada, con su propio estado.
+    -   **Backend**: Cada entorno debe tener un archivo `backend.tf` que apunte al bucket de GCS correspondiente creado por la fase de `bootstrap`.
+    -   **Variables**: La configuración de cada entorno se gestiona a través de su propio archivo `terraform.tfvars`.
+
+-   **`/modules`**:
+    -   **Propósito**: Contiene todos los módulos de Terraform reutilizables. Cada módulo debe ser una unidad lógica y autónoma de infraestructura (ej. un clúster de GKE, una red VPC, una base de datos).
+    -   **Estándares**: Cada módulo debe tener su propio `README.md` documentando su uso, variables y salidas, además de un archivo `OWNERS` para definir la propiedad.
+
 Archivos HCL Estándar:
 
 Las variables se declaran exclusivamente en variables.tf.
