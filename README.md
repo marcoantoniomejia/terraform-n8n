@@ -14,6 +14,22 @@ La infraestructura de cada entorno, gestionada a través de módulos de Terrafor
 - `environments/`: Contiene la configuración de la infraestructura principal para cada entorno (`dev`, `qa`, `prd`).
 - `modules/`: Contiene los módulos reutilizables de Terraform para GKE, discos, etc. Cada módulo incluye su propio archivo `README.md` que detalla su funcionamiento, variables de entrada y salidas.
 
+## Mejoras Recientes y Refactorización (Septiembre 2025)
+
+Este proyecto ha sido recientemente refactorizado para alinearse con mejores prácticas de IaC (Infraestructura como Código) y para mejorar su mantenibilidad y claridad. Los cambios clave incluyen:
+
+- **Modularización y Reutilización**: Se ha refactorizado la creación de discos persistentes en los entornos. En lugar de definir recursos `google_compute_region_disk` directamente, ahora se utiliza el módulo `regional_persistent_disk` con un bucle `for_each`. Esto reduce drásticamente la duplicación de código y centraliza la lógica de creación de discos.
+
+- **Estandarización de Nomenclatura**: Se han renombrado las variables relacionadas con el tamaño de los discos para incluir el sufijo `_gb` (ej. `app_disk_size_gb`). Esto asegura una convención de nomenclatura consistente en todo el proyecto, como se define en las directrices internas.
+
+- **Propiedad del Código (`OWNERS`)**: Se ha añadido un archivo `OWNERS` a cada módulo dentro del directorio `modules/`. Esto clarifica quién es el responsable del mantenimiento de cada componente de la infraestructura.
+
+- **Documentación y Comentarios**:
+    - Cada módulo ahora contiene un bloque de comentarios en español al inicio de su archivo `main.tf`, explicando su propósito, su caso de uso y su lógica principal.
+    - El módulo `network` ha sido identificado como un placeholder y, aunque está vacío, se ha documentado su propósito esperado.
+
+- **Configuración Explícita**: El archivo `terraform.tfvars` del entorno de desarrollo ha sido poblado con todas las variables requeridas, sirviendo como una plantilla clara para la configuración de nuevos entornos.
+
 ---
 
 ## Primeros Pasos (Usando Google Cloud Shell)

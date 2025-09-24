@@ -15,6 +15,21 @@ provider "google" {
   region  = var.gcp_region
 }
 
+locals {
+  # Define la configuración para los discos regionales en un mapa.
+  # Esto permite crear múltiples discos usando for_each, evitando la duplicación de código.
+  regional_disks = {
+    app = {
+      name = var.app_disk_name
+      size = var.app_disk_size_gb
+    },
+    db = {
+      name = var.db_disk_name
+      size = var.db_disk_size_gb
+    }
+  }
+}
+
 # Obtenemos los detalles de la subred del plano de control para extraer su rango CIDR.
 # Google Cloud requiere un rango /28 para el plano de control de GKE.
 data "google_compute_subnetwork" "control_plane_subnet" {
@@ -73,21 +88,16 @@ module "artifact_registry" {
 }
 
 # --- Discos Regionales para Desarrollo ---
+# REFACTORIZADO: Se utiliza el módulo 'regional_persistent_disk' con for_each.
+# Esto elimina el código duplicado y se alinea con las mejores prácticas de modularidad.
+module "regional_disks" {
+  source = "../../modules/regional_persistent_disk"
+  for_each = local.regional_disks
 
-resource "google_compute_region_disk" "app_disk" {
-  project       = var.gcp_project_id
-  name          = var.app_disk_name
-  type          = var.regional_disk_type
+  project_id    = var.gcp_project_id
   region        = var.gcp_region
-  size          = var.app_disk_size
-  replica_zones = var.regional_disk_replica_zones
-}
-
-resource "google_compute_region_disk" "db_disk" {
-  project       = var.gcp_project_id
-  name          = var.db_disk_name
-  type          = var.regional_disk_type
-  region        = var.gcp_region
-  size          = var.db_disk_size
+  disk_name     = each.value.name
+  disk_size_gb  = each.value.size
+  disk_type     = var.regional_disk_type
   replica_zones = var.regional_disk_replica_zones
 }
