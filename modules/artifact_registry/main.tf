@@ -1,3 +1,10 @@
+# =================================================================================================
+# Módulo Terraform para crear un repositorio en Google Artifact Registry.
+#
+# Este módulo se encarga de provisionar un repositorio de tipo Docker, ideal para almacenar
+# las imágenes de contenedor de las aplicaciones.
+# =================================================================================================
+
 # modules/artifact_registry/main.tf
 
 resource "google_artifact_registry_repository" "repository" {
