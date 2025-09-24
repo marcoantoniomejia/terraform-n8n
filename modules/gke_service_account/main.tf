@@ -1,3 +1,13 @@
+# =================================================================================================
+# Módulo Terraform para crear una Cuenta de Servicio de Google (IAM) para nodos de GKE.
+#
+# Este módulo provisiona una cuenta de servicio y le asigna los roles esenciales
+# para que los nodos de un clúster de GKE puedan operar correctamente:
+# - `roles/logging.logWriter`: Para enviar logs a Cloud Logging.
+# - `roles/monitoring.viewer`: Para enviar métricas a Cloud Monitoring.
+# - `roles/artifactregistry.reader`: Para descargar imágenes de contenedor desde Artifact Registry.
+# =================================================================================================
+
 # modules/gke_service_account/main.tf
 
 resource "google_service_account" "gke_sa" {
