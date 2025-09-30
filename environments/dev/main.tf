@@ -27,6 +27,13 @@ data "google_compute_subnetwork" "control_plane_subnet" {
   region  = var.gcp_region
 }
 
+# Módulo para crear la cuenta de servicio dedicada para los nodos de GKE
+module "gke_node_sa" {
+  source      = "../../modules/gke_service_account"
+  project_id  = var.gcp_project_id
+  name_prefix = "dev"
+}
+
 # Módulo de GKE que usa las variables de Shared VPC para el entorno de DEV
 module "gke_cluster" {
   source = "../../modules/gke_cluster"
@@ -35,6 +42,7 @@ module "gke_cluster" {
   name_prefix = "gke-n8n-cluster-dev"
   project_id  = var.gcp_project_id
   region      = var.gcp_region
+  node_service_account_email = module.gke_node_sa.email
 
   # --- Configuración de Red (Shared VPC) ---
   # El módulo ahora soporta Shared VPC y clúster privado
