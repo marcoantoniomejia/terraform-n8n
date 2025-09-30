@@ -11,10 +11,10 @@ artifact_registry_repository_name = "n8n-docker-images"
 
 # --- Configuración de Discos Regionales ---
 app_disk_name = "n8n-app-disk-prod"
-app_disk_size = 20 # Tamaño de disco para la aplicación (n8n)
+app_disk_size_gb = 20 # Tamaño de disco para la aplicación (n8n)
 
 db_disk_name = "n8n-db-disk-prod"
-db_disk_size = 10 # Tamaño de disco para la base de datos (Postgres)
+db_disk_size_gb = 10 # Tamaño de disco para la base de datos (Postgres)
 
 regional_disk_type          = "pd-balanced"
 regional_disk_replica_zones = ["us-west2-a", "us-west2-b"] # Ejemplo, ajusta a tus zonas
