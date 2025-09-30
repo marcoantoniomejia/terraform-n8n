@@ -113,7 +113,7 @@ module "db_persistent_volume" {
   gcp_region         = var.gcp_region
   disk_name          = var.db_disk_name
   disk_type          = var.regional_disk_type
-  disk_size_gb          = var.db_disk_size_gb
+  disk_size_gb       = var.db_disk_size_gb
   disk_replica_zones = var.regional_disk_replica_zones
   pv_name            = "n8n-db-data-pv-dev"
   pv_role            = "db-data"
