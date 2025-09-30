@@ -11,9 +11,9 @@ artifact_registry_repository_name = "n8n-artifacts-qa"
 
 # --- Configuración de Discos Regionales para QA ---
 app_disk_name                 = "n8dappqa"
-app_disk_size                 = 10
+app_disk_size_gb              = 10
 db_disk_name                  = "psgdataqa"
-db_disk_size                  = 70
+db_disk_size_gb               = 70
 regional_disk_type            = "pd-balanced"
 regional_disk_replica_zones   = ["us-west2-a", "us-west2-b"]
 
