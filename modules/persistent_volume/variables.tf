@@ -19,7 +19,7 @@ variable "disk_type" {
   type        = string
 }
 
-variable "disk_size" {
+variable "disk_size_gb" {
   description = "The size of the regional persistent disk in GB."
   type        = number
 }

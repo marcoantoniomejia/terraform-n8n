@@ -4,7 +4,7 @@ resource "google_compute_region_disk" "disk" {
   name          = var.disk_name
   type          = var.disk_type
   region        = var.gcp_region
-  size          = var.disk_size
+  size          = var.disk_size_gb
   replica_zones = var.disk_replica_zones
 }
 
