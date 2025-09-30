@@ -17,7 +17,7 @@ app_disk_name = "n8n-app-disk-dev"
 app_disk_size_gb = 20 # Tamaño de disco para la aplicación (n8n)
 
 db_disk_name = "n8n-db-disk-dev"
-db_disk_size = 10 # Tamaño de disco para la base de datos (Postgres)
+db_disk_size_gb = 10 # Tamaño de disco para la base de datos (Postgres)
 
 regional_disk_type          = "pd-balanced"
 regional_disk_replica_zones = ["us-west2-a", "us-west2-b"] # Ejemplo, ajusta a tus zonas
