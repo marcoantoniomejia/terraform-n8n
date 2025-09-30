@@ -11,9 +11,9 @@ artifact_registry_repository_name = "n8n-artifacts-prd"
 
 # --- Configuración de Discos Regionales para Producción ---
 app_disk_name                 = "n8dapp"
-app_disk_size                 = 10
+app_disk_size_gb              = 10
 db_disk_name                  = "psgdata"
-db_disk_size                  = 100
+db_disk_size_gb               = 100
 regional_disk_type            = "pd-regional-ssd"
 regional_disk_replica_zones   = ["us-west2-a", "us-west2-b"]
 

@@ -1,27 +1,25 @@
-# environments/prod/terraform.tfvars
+gcp_project_id = "psa-td-corp-transf-n8n-prd"
 
-gcp_project_id = "tu-proyecto-gcp-existente"
+# --- Configuración de Red para GKE en Prod (Shared VPC) ---
+gke_network_project_id   = "psa-cld-red-prd"
+gke_network_name         = "psa-cld-red-vpc-prd"
+gke_node_pool_subnet     = "subnet-trans-n8n-prd-01"
+gke_control_plane_subnet = "subnet-trans-n8n-prd-02"
 
-gke_network_project_id     = "tu-proyecto-host-vpc"
-gke_node_pool_subnet       = "nombre-subred-nodos"
-gke_control_plane_subnet   = "nombre-subred-control-plane"
-gke_network_name           = "nombre-vpc-compartida"
+# --- Configuración de Recursos Adicionales ---
+artifact_registry_repository_name = "n8n-artifacts-prd"
 
-artifact_registry_repository_name = "n8n-docker-images"
+# --- Configuración de Discos Regionales para Producción ---
+app_disk_name                 = "n8dapp"
+app_disk_size_gb              = 10
+db_disk_name                  = "psgdata"
+db_disk_size_gb               = 100
+regional_disk_type            = "pd-regional-ssd"
+regional_disk_replica_zones   = ["us-west2-a", "us-west2-b"]
 
-# --- Configuración de Discos Regionales ---
-app_disk_name = "n8n-app-disk-prod"
-app_disk_size_gb = 20 # Tamaño de disco para la aplicación (n8n)
-
-db_disk_name = "n8n-db-disk-prod"
-db_disk_size_gb = 10 # Tamaño de disco para la base de datos (Postgres)
-
-regional_disk_type          = "pd-balanced"
-regional_disk_replica_zones = ["us-west2-a", "us-west2-b"] # Ejemplo, ajusta a tus zonas
-
-# --- Configuración del Node Pool de GKE ---
-gke_machine_type = "e2-medium"
+# --- Configuración del Node Pool de GKE para Producción ---
+gke_machine_type   = "n2d-standard-8"
 gke_min_node_count = 1
 gke_max_node_count = 3
-gke_disk_type      = "pd-standard"
-gke_disk_size_gb   = 50
+gke_disk_type      = "pd-ssd"
+gke_disk_size_gb   = 10
