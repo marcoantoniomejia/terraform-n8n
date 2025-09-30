@@ -7,6 +7,10 @@ terraform {
       source  = "hashicorp/google"
       version = ">= 4.50.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.20.0"
+    }
   }
 }
 
@@ -70,22 +74,45 @@ module "artifact_registry" {
   depends_on    = [google_project_service.artifactregistry]
 }
 
-# --- Discos Regionales para QA ---
+# --------------------------------------------------------------------------------
+# --- Configuración del Proveedor de Kubernetes y PersistentVolumes (PV) ---
+# --------------------------------------------------------------------------------
 
-resource "google_compute_region_disk" "app_disk" {
-  project       = var.gcp_project_id
-  name          = var.app_disk_name
-  type          = var.regional_disk_type
-  region        = var.gcp_region
-  size          = var.app_disk_size
-  replica_zones = var.regional_disk_replica_zones
+# Obtenemos la configuración del cliente de gcloud para autenticar el proveedor de Kubernetes.
+data "google_client_config" "default" {}
+
+# Configuramos el proveedor de Kubernetes para que se conecte al clúster GKE creado.
+# Esto nos permite gestionar recursos de Kubernetes (como PersistentVolumes) con Terraform.
+provider "kubernetes" {
+  host                   = "https://${module.gke_cluster.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke_cluster.cluster_ca_certificate)
 }
 
-resource "google_compute_region_disk" "db_disk" {
-  project       = var.gcp_project_id
-  name          = var.db_disk_name
-  type          = var.regional_disk_type
-  region        = var.gcp_region
-  size          = var.db_disk_size
-  replica_zones = var.regional_disk_replica_zones
+# --- Persistent Volumes ---
+
+module "app_persistent_volume" {
+  source = "../../modules/persistent_volume"
+
+  gcp_project_id     = var.gcp_project_id
+  gcp_region         = var.gcp_region
+  disk_name          = var.app_disk_name
+  disk_type          = var.regional_disk_type
+  disk_size          = var.app_disk_size
+  disk_replica_zones = var.regional_disk_replica_zones
+  pv_name            = "n8n-app-data-pv-qa"
+  pv_role            = "app-data"
+}
+
+module "db_persistent_volume" {
+  source = "../../modules/persistent_volume"
+
+  gcp_project_id     = var.gcp_project_id
+  gcp_region         = var.gcp_region
+  disk_name          = var.db_disk_name
+  disk_type          = var.regional_disk_type
+  disk_size          = var.db_disk_size
+  disk_replica_zones = var.regional_disk_replica_zones
+  pv_name            = "n8n-db-data-pv-qa"
+  pv_role            = "db-data"
 }

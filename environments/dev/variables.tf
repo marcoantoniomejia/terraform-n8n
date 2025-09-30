@@ -51,7 +51,7 @@ variable "db_disk_name" {
   type        = string
 }
 
-variable "db_disk_size_gb" {
+variable "db_disk_size" {
   description = "Tamaño en GB para el disco de la base de datos."
   type        = number
 }
