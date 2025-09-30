@@ -7,27 +7,16 @@ terraform {
       source  = "hashicorp/google"
       version = ">= 4.50.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.20.0"
+    }
   }
 }
 
 provider "google" {
   project = var.gcp_project_id
   region  = var.gcp_region
-}
-
-locals {
-  # Define la configuración para los discos regionales en un mapa.
-  # Esto permite crear múltiples discos usando for_each, evitando la duplicación de código.
-  regional_disks = {
-    app = {
-      name = var.app_disk_name
-      size = var.app_disk_size_gb
-    },
-    db = {
-      name = var.db_disk_name
-      size = var.db_disk_size_gb
-    }
-  }
 }
 
 # Obtenemos los detalles de la subred del plano de control para extraer su rango CIDR.
@@ -87,17 +76,45 @@ module "artifact_registry" {
   depends_on    = [google_project_service.artifactregistry]
 }
 
-# --- Discos Regionales para Desarrollo ---
-# REFACTORIZADO: Se utiliza el módulo 'regional_persistent_disk' con for_each.
-# Esto elimina el código duplicado y se alinea con las mejores prácticas de modularidad.
-module "regional_disks" {
-  source = "../../modules/regional_persistent_disk"
-  for_each = local.regional_disks
+# --------------------------------------------------------------------------------
+# --- Configuración del Proveedor de Kubernetes y PersistentVolumes (PV) ---
+# --------------------------------------------------------------------------------
 
-  project_id    = var.gcp_project_id
-  region        = var.gcp_region
-  disk_name     = each.value.name
-  disk_size_gb  = each.value.size
-  disk_type     = var.regional_disk_type
-  replica_zones = var.regional_disk_replica_zones
+# Obtenemos la configuración del cliente de gcloud para autenticar el proveedor de Kubernetes.
+data "google_client_config" "default" {}
+
+# Configuramos el proveedor de Kubernetes para que se conecte al clúster GKE creado.
+# Esto nos permite gestionar recursos de Kubernetes (como PersistentVolumes) con Terraform.
+provider "kubernetes" {
+  host                   = "https://${module.gke_cluster.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke_cluster.cluster_ca_certificate)
+}
+
+# --- Persistent Volumes ---
+
+module "app_persistent_volume" {
+  source = "../../modules/persistent_volume"
+
+  gcp_project_id     = var.gcp_project_id
+  gcp_region         = var.gcp_region
+  disk_name          = var.app_disk_name
+  disk_type          = var.regional_disk_type
+  disk_size          = var.app_disk_size
+  disk_replica_zones = var.regional_disk_replica_zones
+  pv_name            = "n8n-app-data-pv-dev"
+  pv_role            = "app-data"
+}
+
+module "db_persistent_volume" {
+  source = "../../modules/persistent_volume"
+
+  gcp_project_id     = var.gcp_project_id
+  gcp_region         = var.gcp_region
+  disk_name          = var.db_disk_name
+  disk_type          = var.regional_disk_type
+  disk_size          = var.db_disk_size
+  disk_replica_zones = var.regional_disk_replica_zones
+  pv_name            = "n8n-db-data-pv-dev"
+  pv_role            = "db-data"
 }
