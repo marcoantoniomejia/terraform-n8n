@@ -41,7 +41,7 @@ variable "app_disk_name" {
   type        = string
 }
 
-variable "app_disk_size" {
+variable "app_disk_size_gb" {
   description = "Tamaño en GB para el disco de la aplicación."
   type        = number
 }
