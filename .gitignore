@@ -12,3 +12,4 @@ __pycache__/
 
 # Ignore general log files
 *.log
+modules.json
