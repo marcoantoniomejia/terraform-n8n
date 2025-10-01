@@ -75,6 +75,7 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 
   network_config {
+    create_pod_range    = true
     pod_ipv4_cidr_block = "/25"
   }
 

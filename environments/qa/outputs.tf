@@ -8,12 +8,12 @@ output "artifact_registry_repository_name" {
   value       = module.artifact_registry.repository_id
 }
 
-output "app_disk_self_link" {
-  description = "Self-link del disco regional de la aplicación."
-  value       = google_compute_region_disk.app_disk.self_link
-}
+# output "app_disk_self_link" {
+#   description = "Self-link del disco regional de la aplicación."
+#   value       = google_compute_region_disk.app_disk.self_link
+# }
 
-output "db_disk_self_link" {
-  description = "Self-link del disco regional de la base de datos."
-  value       = google_compute_region_disk.db_disk.self_link
-}
+# output "db_disk_self_link" {
+#   description = "Self-link del disco regional de la base de datos."
+#   value       = google_compute_region_disk.db_disk.self_link
+# }

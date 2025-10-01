@@ -19,13 +19,7 @@ provider "google" {
   region  = var.gcp_region
 }
 
-# Obtenemos los detalles de la subred del plano de control para extraer su rango CIDR.
-# Google Cloud requiere un rango /28 para el plano de control de GKE.
-data "google_compute_subnetwork" "control_plane_subnet" {
-  project = var.gke_network_project_id
-  name    = var.gke_control_plane_subnet
-  region  = var.gcp_region
-}
+
 
 # Módulo para crear la cuenta de servicio dedicada para los nodos de GKE
 module "gke_node_sa" {
@@ -53,7 +47,7 @@ module "gke_cluster" {
   private_cluster_config = {
     enable_private_endpoint = true
     enable_private_nodes    = true
-    master_ipv4_cidr_block  = data.google_compute_subnetwork.control_plane_subnet.ip_cidr_range
+    master_ipv4_cidr_block  = "172.29.46.0/28"
   }
 
   # --- Configuración del Node Pool ---
@@ -92,13 +86,14 @@ data "google_client_config" "default" {}
 # Configuramos el proveedor de Kubernetes para que se conecte al clúster GKE creado.
 # Esto nos permite gestionar recursos de Kubernetes (como PersistentVolumes) con Terraform.
 provider "kubernetes" {
-  host                   = "https://${module.gke_cluster.endpoint}"
+  host                   = "https://${module.gke_cluster.cluster_endpoint}"
   token                  = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(module.gke_cluster.cluster_ca_certificate)
 }
 
 # --- Persistent Volumes ---
 
+/*
 module "app_persistent_volume" {
   source = "../../modules/persistent_volume"
 
@@ -124,3 +119,4 @@ module "db_persistent_volume" {
   pv_name            = "n8n-db-data-pv-qa"
   pv_role            = "db-data"
 }
+*/
