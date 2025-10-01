@@ -1,0 +1,14 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore Terraform state files
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Ignore general log files
+*.log
