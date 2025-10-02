@@ -120,3 +120,24 @@ module "db_persistent_volume" {
   pv_role            = "db-data"
 }
 */
+
+# Regla de Firewall para permitir la comunicación desde el plano de control de GKE a los nodos.
+# Esto es mandatorio para los clústeres privados.
+resource "google_compute_firewall" "gke_master_to_nodes_allow" {
+  # Esta regla debe crearse en el proyecto HOST de la Shared VPC
+  project = var.gke_network_project_id
+
+  name    = "${var.gcp_env}-gke-master-to-nodes-allow"
+  network = var.gke_network_name
+
+  # Permitir tráfico desde el CIDR del master de GKE
+  source_ranges = ["172.29.46.0/28"]
+
+  # Aplicar a los nodos que usan la cuenta de servicio de GKE
+  target_service_accounts = [module.gke_node_sa.email]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443", "10250"] # Puerto para Konnectivity y Kubelet
+  }
+}
