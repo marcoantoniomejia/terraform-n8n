@@ -36,3 +36,10 @@ resource "google_project_iam_member" "artifact_registry" {
   role    = "roles/artifactregistry.reader"
   member  = "serviceAccount:${google_service_account.gke_sa.email}"
 }
+
+# Permisos para que los nodos puedan extraer imágenes de GCR (Google Container Registry)
+resource "google_project_iam_member" "gcr_storage_reader" {
+  project = var.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.gke_sa.email}"
+}

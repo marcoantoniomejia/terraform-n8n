@@ -14,7 +14,7 @@ resource "google_container_cluster" "primary" {
   name     = "${var.name_prefix}-gke-cluster"
   location = var.region
   project  = var.project_id
-  deletion_protection = false
+  deletion_protection = true
 
   # Habilitar Logging y Monitoring para el clúster
   logging_service    = var.logging_service
