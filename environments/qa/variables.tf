@@ -11,6 +11,11 @@ variable "gcp_region" {
   default     = "us-west2"
 }
 
+variable "gcp_env" {
+  description = "El nombre del entorno (ej. dev, qa, prd) para nombrar recursos."
+  type        = string
+}
+
 variable "gke_network_project_id" {
   description = "El ID del proyecto Host de la VPC compartida."
   type        = string

@@ -1,4 +1,5 @@
 gcp_project_id = "psa-td-corp-transf-n8n-qa"
+gcp_env        = "qa"
 
 # --- Configuración de Red para GKE en QA (Shared VPC) ---
 gke_network_project_id   = "psa-cld-red-qa"
