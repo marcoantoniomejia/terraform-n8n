@@ -55,6 +55,7 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
 }
 
+/*
 resource "google_container_node_pool" "primary_nodes" {
   name       = "${var.name_prefix}-node-pool"
   location   = var.region
@@ -85,3 +86,4 @@ resource "google_container_node_pool" "primary_nodes" {
     service_account = var.node_service_account_email
   }
 }
+*/
