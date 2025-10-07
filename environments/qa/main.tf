@@ -26,6 +26,7 @@ module "gke_node_sa" {
   source      = "../../modules/gke_service_account"
   project_id  = var.gcp_project_id
   name_prefix = "qa"
+  network_project_id = var.gke_network_project_id
 }
 
 # Módulo de GKE que usa las variables de Shared VPC para el entorno de QA

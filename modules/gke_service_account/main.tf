@@ -43,3 +43,10 @@ resource "google_project_iam_member" "gcr_storage_reader" {
   role    = "roles/storage.objectViewer"
   member  = "serviceAccount:${google_service_account.gke_sa.email}"
 }
+
+# Permisos para que los nodos puedan usar la red del proyecto Host (Shared VPC)
+resource "google_project_iam_member" "shared_vpc_network_user" {
+  project = var.network_project_id
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:${google_service_account.gke_sa.email}"
+}
