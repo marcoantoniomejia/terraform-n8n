@@ -23,10 +23,18 @@ provider "google" {
 
 # Módulo para crear la cuenta de servicio dedicada para los nodos de GKE
 module "gke_node_sa" {
-  source      = "../../modules/gke_service_account"
-  project_id  = var.gcp_project_id
-  name_prefix = "qa"
+  source             = "../../modules/gke_service_account"
+  project_id         = var.gcp_project_id
+  name_prefix        = "qa"
   network_project_id = var.gke_network_project_id
+}
+
+# Permiso para que el Agente de Servicio de GKE pueda actuar como la cuenta de servicio de los nodos.
+# Es un requisito para Shared VPC.
+resource "google_service_account_iam_member" "gke_agent_is_user_of_node_sa" {
+  service_account_id = module.gke_node_sa.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
 }
 
 # Módulo de GKE que usa las variables de Shared VPC para el entorno de QA

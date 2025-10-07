@@ -1,6 +1,9 @@
-# modules/gke_service_account/outputs.tf
-
 output "email" {
-  description = "The email of the created GKE service account."
+  description = "The email of the created service account."
   value       = google_service_account.gke_sa.email
+}
+
+output "name" {
+  description = "The fully-qualified name of the created service account."
+  value       = google_service_account.gke_sa.name
 }
