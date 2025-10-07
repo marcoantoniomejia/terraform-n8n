@@ -68,6 +68,13 @@ resource "google_project_service" "artifactregistry" {
   disable_on_destroy = false
 }
 
+# Habilitar la API de Cloud Billing
+resource "google_project_service" "cloudbilling" {
+  project            = var.gcp_project_id
+  service            = "cloudbilling.googleapis.com"
+  disable_on_destroy = false
+}
+
 module "artifact_registry" {
   source        = "../../modules/artifact_registry"
   project_id    = var.gcp_project_id
