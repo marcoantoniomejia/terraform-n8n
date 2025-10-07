@@ -40,15 +40,14 @@ resource "google_container_cluster" "primary" {
     services_secondary_range_name = "gke-services-range-n8n"
   }
 
-    master_authorized_networks_config {
-    cidr_blocks {
-        display_name = "gke-nodes-subnet"
-        cidr_block   = "172.29.47.0/24"
-       }
-     cidr_blocks {
-        display_name = "management-bastion-host"
-        cidr_block   = "172.29.48.0/28"
-       }      
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.master_authorized_networks
+      content {
+        display_name = cidr_blocks.value.display_name
+        cidr_block   = cidr_blocks.value.cidr_block
+      }
+    }
   }
 
   initial_node_count = 1

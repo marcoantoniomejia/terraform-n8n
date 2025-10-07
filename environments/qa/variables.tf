@@ -36,6 +36,11 @@ variable "gke_control_plane_subnet" {
   type        = string
 }
 
+variable "gke_master_ipv4_cidr_block" {
+  description = "El bloque CIDR para el master_ipv4_cidr_block del clúster de GKE. Debe ser /28."
+  type        = string
+}
+
 variable "artifact_registry_repository_name" {
   description = "Nombre para el repositorio de Artifact Registry."
   type        = string

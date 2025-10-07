@@ -47,7 +47,7 @@ module "gke_cluster" {
   private_cluster_config = {
     enable_private_endpoint = true
     enable_private_nodes    = true
-    master_ipv4_cidr_block  = "172.29.46.0/28"
+    master_ipv4_cidr_block  = var.gke_master_ipv4_cidr_block
   }
 
   # --- Configuración del Node Pool ---
@@ -139,7 +139,7 @@ resource "google_compute_firewall" "gke_master_to_nodes_allow" {
   network = var.gke_network_name
 
   # Permitir tráfico desde el CIDR del master de GKE
-  source_ranges = ["172.29.46.0/28"]
+  source_ranges = [var.gke_master_ipv4_cidr_block]
 
   # Aplicar a los nodos que usan la cuenta de servicio de GKE
   target_service_accounts = [module.gke_node_sa.email]

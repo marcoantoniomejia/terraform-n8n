@@ -108,3 +108,12 @@ variable "private_cluster_config" {
   })
   default = null
 }
+
+variable "master_authorized_networks" {
+  description = "Lista de bloques CIDR autorizados para acceder al master de GKE."
+  type = list(object({
+    display_name = string
+    cidr_block   = string
+  }))
+  default = []
+}

@@ -6,6 +6,7 @@ gke_network_project_id   = "psa-cld-red-qa"
 gke_network_name         = "psa-cld-red-vpc-qa"
 gke_node_pool_subnet     = "subnet-trans-n8n-qas-01"
 gke_control_plane_subnet = "subnet-trans-n8n-qas-02"
+gke_master_ipv4_cidr_block = "172.29.46.0/28"
 
 # --- Configuración de Recursos Adicionales ---
 artifact_registry_repository_name = "n8n-artifacts-qa"
