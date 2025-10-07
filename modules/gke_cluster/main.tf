@@ -22,8 +22,8 @@ resource "google_container_cluster" "primary" {
 
   # Lógica para Shared VPC: si se provee un network_project_id, se construye la URL completa.
   # Si no, se asume que la red está en el mismo proyecto.
-  network    = var.network_project_id == null ? var.network_name : "projects/${var.network_project_id}/global/networks/${var.network_name}"
-  subnetwork = var.network_project_id == null ? var.subnetwork_name : "projects/${var.network_project_id}/regions/${var.region}/subnetworks/${var.subnetwork_name}"
+  network    = "projects/${var.network_project_id}/global/networks/${var.network_name}"
+  subnetwork = "projects/${var.network_project_id}/regions/${var.region}/subnetworks/${var.subnetwork_name}"
 
   # Configuración de clúster privado (si se proporciona)
   dynamic "private_cluster_config" {
