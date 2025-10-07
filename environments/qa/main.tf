@@ -57,6 +57,7 @@ module "gke_cluster" {
   enable_autoscaling = true
   min_node_count     = var.gke_min_node_count
   max_node_count     = var.gke_max_node_count
+  node_locations     = ["us-west2-a", "us-west2-b"]
 }
 
 # --- Recursos Adicionales ---
