@@ -6,6 +6,17 @@ gke_network_project_id   = "psa-cld-red-qa"
 gke_network_name         = "psa-cld-red-vpc-qa"
 gke_node_pool_subnet     = "subnet-trans-n8n-qas-01"
 gke_control_plane_subnet = "subnet-trans-n8n-qas-02"
+gke_master_ipv4_cidr_block = "172.29.46.0/28"
+master_authorized_networks = [
+  {
+    display_name = "gke-nodes-subnet-qa",
+    cidr_block   = "172.29.45.0/24"
+  },
+  {
+    display_name = "management-bastion-host",
+    cidr_block   = "172.29.48.0/28"
+  }
+]
 
 # --- Configuración de Recursos Adicionales ---
 artifact_registry_repository_name = "n8n-artifacts-qa"
@@ -23,4 +34,4 @@ gke_machine_type   = "n2d-standard-4"
 gke_min_node_count = 1
 gke_max_node_count = 3
 gke_disk_type      = "pd-ssd"
-gke_disk_size_gb   = 10
+gke_disk_size_gb   = 30
