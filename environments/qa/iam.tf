@@ -23,3 +23,9 @@ resource "google_project_iam_member" "gke_node_monitoring_viewer" {
   role    = "roles/monitoring.viewer"
   member  = "serviceAccount:${module.gke_node_sa.email}"
 }
+
+resource "google_project_iam_member" "gke_node_default_node_service_account" {
+  project = var.gke_network_project_id
+  role    = "roles/container.defaultNodeServiceAccount"
+  member  = "serviceAccount:${module.gke_node_sa.email}"
+}
