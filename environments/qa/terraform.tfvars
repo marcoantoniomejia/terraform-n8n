@@ -7,7 +7,7 @@ gke_network_name         = "psa-cld-red-vpc-qa"
 gke_node_pool_subnet     = "subnet-trans-n8n-qas-01"
 gke_control_plane_subnet = "subnet-trans-n8n-qas-02"
 gke_master_ipv4_cidr_block = "172.29.46.0/28"
-master_authorized_networks = [
+gke_master_authorized_networks = [
   {
     display_name = "gke-nodes-subnet-qa",
     cidr_block   = "172.29.45.0/24"

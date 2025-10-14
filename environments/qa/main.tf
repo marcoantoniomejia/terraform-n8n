@@ -58,6 +58,7 @@ module "gke_cluster" {
     enable_private_nodes    = true
     master_ipv4_cidr_block  = var.gke_master_ipv4_cidr_block
   }
+  master_authorized_networks = var.gke_master_authorized_networks
 
   # --- Configuración del Node Pool ---
   machine_type     = var.gke_machine_type
