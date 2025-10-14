@@ -1,18 +1,15 @@
-# c:\Users\marmejia\Documents\Desarrollo\terraform-n8n\terraform-n8n\environments\qa\variables.tf
-
 variable "gcp_project_id" {
-  description = "El ID del proyecto de Google Cloud (Service Project) donde se desplegará el clúster GKE."
+  description = "El ID del proyecto de GCP."
+  type        = string
+}
+
+variable "gcp_env" {
+  description = "El entorno de despliegue (e.g., qa, dev, prd)."
   type        = string
 }
 
 variable "gcp_region" {
-  description = "La región donde se desplegarán los recursos."
-  type        = string
-  default     = "us-west2"
-}
-
-variable "gcp_env" {
-  description = "El nombre del entorno (ej. dev, qa, prd) para nombrar recursos."
+  description = "La región de GCP para el despliegue."
   type        = string
 }
 
@@ -22,83 +19,90 @@ variable "gke_network_project_id" {
 }
 
 variable "gke_network_name" {
-  description = "El nombre de la red VPC donde se conectará el clúster GKE."
+  description = "El nombre de la red VPC compartida."
   type        = string
 }
 
 variable "gke_node_pool_subnet" {
-  description = "El nombre de la subred en la VPC compartida para los nodos del clúster GKE."
+  description = "El nombre de la subred para los nodos de GKE."
   type        = string
 }
 
 variable "gke_control_plane_subnet" {
-  description = "El nombre de la subred en la VPC compartida para el plano de control del clúster GKE (debe ser /28)."
+  description = "El nombre de la subred para el plano de control de GKE."
   type        = string
 }
 
 variable "gke_master_ipv4_cidr_block" {
-  description = "El bloque CIDR para el master_ipv4_cidr_block del clúster de GKE. Debe ser /28."
+  description = "El bloque CIDR para el plano de control de GKE."
   type        = string
 }
 
+variable "gke_master_authorized_networks" {
+  description = "Lista de bloques CIDR autorizados para acceder al master de GKE."
+  type = list(object({
+    display_name = string
+    cidr_block   = string
+  }))
+  default = []
+}
+
 variable "artifact_registry_repository_name" {
-  description = "Nombre para el repositorio de Artifact Registry."
+  description = "El nombre del repositorio de Artifact Registry."
   type        = string
 }
 
 variable "app_disk_name" {
-  description = "Nombre para el disco de la aplicación (n8n)."
+  description = "Nombre del disco para la aplicación."
   type        = string
 }
 
 variable "app_disk_size_gb" {
-  description = "Tamaño en GB para el disco de la aplicación."
+  description = "Tamaño en GB del disco para la aplicación."
   type        = number
 }
 
 variable "db_disk_name" {
-  description = "Nombre para el disco de la base de datos (PostgreSQL)."
+  description = "Nombre del disco para la base de datos."
   type        = string
 }
 
 variable "db_disk_size_gb" {
-  description = "Tamaño en GB para el disco de la base de datos."
+  description = "Tamaño en GB del disco para la base de datos."
   type        = number
 }
 
 variable "regional_disk_type" {
-  description = "Tipo de disco regional a utilizar (ej. pd-balanced)."
+  description = "Tipo de disco regional."
   type        = string
 }
 
 variable "regional_disk_replica_zones" {
-  description = "Lista de dos zonas para la replicación del disco regional."
+  description = "Zonas de réplica para el disco regional."
   type        = list(string)
 }
 
-# --- Configuración del Node Pool de GKE ---
-
 variable "gke_machine_type" {
-  description = "El tipo de máquina para los nodos del clúster GKE."
+  description = "Tipo de máquina para los nodos de GKE."
   type        = string
 }
 
 variable "gke_min_node_count" {
-  description = "El número mínimo de nodos para el autoscaling del clúster."
+  description = "Número mínimo de nodos para el autoscaling."
   type        = number
 }
 
 variable "gke_max_node_count" {
-  description = "El número máximo de nodos para el autoscaling del clúster."
+  description = "Número máximo de nodos para el autoscaling."
   type        = number
 }
 
 variable "gke_disk_type" {
-  description = "El tipo de disco de arranque para los nodos (ej. pd-standard, pd-ssd)."
+  description = "Tipo de disco para los nodos de GKE."
   type        = string
 }
 
 variable "gke_disk_size_gb" {
-  description = "El tamaño en GB del disco de arranque para los nodos."
+  description = "Tamaño en GB del disco para los nodos de GKE."
   type        = number
 }
