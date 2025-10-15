@@ -26,6 +26,11 @@ variable "network_name" {
   type        = string
 }
 
+variable "network_project_id" {
+  description = "El ID del proyecto host de la red VPC compartida."
+  type        = string
+}
+
 variable "subnetwork_name" {
   description = "El nombre de la subred a la que se conectará el bastión."
   type        = string

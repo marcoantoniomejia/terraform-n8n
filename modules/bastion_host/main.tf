@@ -12,8 +12,8 @@ resource "google_compute_instance" "bastion" {
   }
 
   network_interface {
-    network    = var.network_name
-    subnetwork = var.subnetwork_name
+    network    = "projects/${var.network_project_id}/global/networks/${var.network_name}"
+    subnetwork = "projects/${var.network_project_id}/regions/${var.zone == null ? "" : substr(var.zone, 0, length(var.zone) - 2)}/subnetworks/${var.subnetwork_name}"
     # La IP externa es necesaria para la configuración inicial.
     # Se puede restringir el acceso a través de reglas de firewall.
     access_config {}
