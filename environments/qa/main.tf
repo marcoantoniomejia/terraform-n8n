@@ -84,6 +84,7 @@ module "bastion_host" {
   source                = "../../modules/bastion_host"
   project_id            = var.gcp_project_id
   zone                  = "us-west2-a" # O la zona que prefieras
+  network_project_id    = var.gke_network_project_id
   network_name          = var.gke_network_name
   subnetwork_name       = var.gke_node_pool_subnet
   service_account_email = module.bastion_sa.email
