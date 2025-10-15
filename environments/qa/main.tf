@@ -73,9 +73,10 @@ module "gke_cluster" {
 
 # Módulo para crear la cuenta de servicio para el bastión
 module "bastion_sa" {
-  source      = "../../modules/gke_service_account"
-  project_id  = var.gcp_project_id
-  name_prefix = "bastion-qa"
+  source             = "../../modules/gke_service_account"
+  project_id         = var.gcp_project_id
+  name_prefix        = "bastion-qa"
+  network_project_id = var.gke_network_project_id
 }
 
 # Módulo para crear el servidor bastión
