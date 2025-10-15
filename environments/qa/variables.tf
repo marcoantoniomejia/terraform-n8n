@@ -59,7 +59,7 @@ variable "maintenance_policy" {
   default = {
     recurring_window = {
       start_time = "1970-01-03T06:00:00Z"
-      end_time   = "1970-01-03T10:00:00Z"
+      end_time   = "1970-01-03T14:00:00Z"
       recurrence = "FREQ=WEEKLY;BYDAY=FR,SA"
     }
   }
