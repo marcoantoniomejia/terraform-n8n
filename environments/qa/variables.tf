@@ -47,6 +47,24 @@ variable "gke_master_authorized_networks" {
   default = []
 }
 
+variable "maintenance_policy" {
+  description = "Objeto de configuración para la política de mantenimiento del clúster."
+  type = object({
+    recurring_window = object({
+      start_time = string
+      end_time   = string
+      recurrence = string
+    })
+  })
+  default = {
+    recurring_window = {
+      start_time = "1970-01-03T06:00:00Z"
+      end_time   = "1970-01-03T10:00:00Z"
+      recurrence = "FREQ=WEEKLY;BYDAY=FR,SA"
+    }
+  }
+}
+
 variable "artifact_registry_repository_name" {
   description = "El nombre del repositorio de Artifact Registry."
   type        = string

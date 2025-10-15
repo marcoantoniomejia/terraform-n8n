@@ -50,6 +50,17 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  dynamic "maintenance_policy" {
+    for_each = var.maintenance_policy != null ? [var.maintenance_policy] : []
+    content {
+      recurring_window {
+        start_time = maintenance_policy.value.recurring_window.start_time
+        end_time   = maintenance_policy.value.recurring_window.end_time
+        recurrence = maintenance_policy.value.recurring_window.recurrence
+      }
+    }
+  }
+
   initial_node_count = 1
   remove_default_node_pool = true
 }

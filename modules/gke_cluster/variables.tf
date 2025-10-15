@@ -117,3 +117,15 @@ variable "master_authorized_networks" {
   }))
   default = []
 }
+
+variable "maintenance_policy" {
+  description = "Objeto de configuración para la política de mantenimiento del clúster."
+  type = object({
+    recurring_window = object({
+      start_time = string
+      end_time   = string
+      recurrence = string
+    })
+  })
+  default = null
+}

@@ -11,12 +11,9 @@ gke_master_authorized_networks = [
   {
     display_name = "gke-nodes-subnet-qa",
     cidr_block   = "172.29.45.0/24"
-  },
-  {
-    display_name = "management-bastion-host",
-    cidr_block   = "172.29.48.0/28"
   }
 ]
+
 
 # --- Configuración de Recursos Adicionales ---
 artifact_registry_repository_name = "n8n-artifacts-qa"

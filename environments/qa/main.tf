@@ -59,6 +59,7 @@ module "gke_cluster" {
     master_ipv4_cidr_block  = var.gke_master_ipv4_cidr_block
   }
   master_authorized_networks = var.gke_master_authorized_networks
+  maintenance_policy         = var.maintenance_policy
 
   # --- Configuración del Node Pool ---
   machine_type     = var.gke_machine_type
@@ -68,6 +69,23 @@ module "gke_cluster" {
   min_node_count     = var.gke_min_node_count
   max_node_count     = var.gke_max_node_count
   node_locations     = ["us-west2-a", "us-west2-b", "us-west2-c"]
+}
+
+# Módulo para crear la cuenta de servicio para el bastión
+module "bastion_sa" {
+  source      = "../../modules/gke_service_account"
+  project_id  = var.gcp_project_id
+  name_prefix = "bastion-qa"
+}
+
+# Módulo para crear el servidor bastión
+module "bastion_host" {
+  source                = "../../modules/bastion_host"
+  project_id            = var.gcp_project_id
+  zone                  = "us-west2-a" # O la zona que prefieras
+  network_name          = var.gke_network_name
+  subnetwork_name       = var.gke_node_pool_subnet
+  service_account_email = module.bastion_sa.email
 }
 
 # --- Recursos Adicionales ---
@@ -111,7 +129,6 @@ provider "kubernetes" {
 
 # --- Persistent Volumes ---
 
-/*
 module "app_persistent_volume" {
   source = "../../modules/persistent_volume"
 
@@ -137,7 +154,6 @@ module "db_persistent_volume" {
   pv_name            = "n8n-db-data-pv-qa"
   pv_role            = "db-data"
 }
-*/
 
 # Regla de Firewall para permitir la comunicación desde el plano de control de GKE a los nodos.
 # Esto es mandatorio para los clústeres privados.
