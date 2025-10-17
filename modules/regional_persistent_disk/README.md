@@ -6,6 +6,8 @@ Este módulo de Terraform provisiona un **Disco Persistente Regional (`google_co
 
 A diferencia de un disco zonal, un disco regional replica los datos de forma sincrónica entre dos zonas dentro de una misma región (ej. entre `us-central1-a` y `us-central1-b`). Esta característica proporciona **alta disponibilidad** para el almacenamiento. Si una de las zonas falla, el disco puede ser adjuntado a una carga de trabajo en la otra zona de réplica, garantizando la continuidad del servicio.
 
+El disco se crea con las etiquetas `managed-by = "terraform"` y `purpose = "<disk_name>"` para una mejor gestión y seguimiento de los recursos.
+
 Es la opción recomendada para cargas de trabajo críticas y con estado que se ejecutan en clústeres de GKE regionales.
 
 ## Uso
@@ -22,6 +24,14 @@ module "mi_disco_regional" {
   disk_size_gb  = 100
 }
 ```
+
+## Archivos del Módulo
+
+- `main.tf`: Contiene la lógica principal del módulo, donde se define el recurso `google_compute_region_disk`.
+- `variables.tf`: Define las variables de entrada que el módulo acepta. **No modifiques este archivo para cambiar valores**. Los valores de las variables deben pasarse desde la configuración del entorno que utiliza el módulo (ej. `environments/dev/main.tf`).
+- `outputs.tf`: Define las variables de salida del módulo.
+- `README.md`: Este archivo de documentación.
+- `OWNERS`: Archivo que especifica los propietarios y responsables del módulo.
 
 ## Entradas (Inputs)
 

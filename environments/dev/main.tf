@@ -19,19 +19,22 @@ provider "google" {
   region  = var.gcp_region
 }
 
-# Obtenemos los detalles de la subred del plano de control para extraer su rango CIDR.
-# Google Cloud requiere un rango /28 para el plano de control de GKE.
-data "google_compute_subnetwork" "control_plane_subnet" {
-  project = var.gke_network_project_id
-  name    = var.gke_control_plane_subnet
-  region  = var.gcp_region
-}
+
 
 # Módulo para crear la cuenta de servicio dedicada para los nodos de GKE
 module "gke_node_sa" {
-  source      = "../../modules/gke_service_account"
-  project_id  = var.gcp_project_id
-  name_prefix = "dev"
+  source             = "../../modules/gke_service_account"
+  project_id         = var.gcp_project_id
+  name_prefix        = "dev"
+  network_project_id = var.gke_network_project_id
+}
+
+# Permiso para que el Agente de Servicio de GKE pueda actuar como la cuenta de servicio de los nodos.
+# Es un requisito para Shared VPC.
+resource "google_service_account_iam_member" "gke_agent_is_user_of_node_sa" {
+  service_account_id = module.gke_node_sa.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
 }
 
 # Módulo de GKE que usa las variables de Shared VPC para el entorno de DEV
@@ -39,24 +42,24 @@ module "gke_cluster" {
   source = "../../modules/gke_cluster"
 
   # --- Parámetros del Clúster ---
-  name_prefix = "gke-n8n-cluster-dev"
+  name_prefix = "gke-n8n-cluster-dev" # Nombre específico para DEV
   project_id  = var.gcp_project_id
   region      = var.gcp_region
   node_service_account_email = module.gke_node_sa.email
 
   # --- Configuración de Red (Shared VPC) ---
-  # El módulo ahora soporta Shared VPC y clúster privado
   network_project_id = var.gke_network_project_id
   network_name       = var.gke_network_name
   subnetwork_name    = var.gke_node_pool_subnet # Subnet para los nodos
 
   # --- Configuración de Clúster Privado ---
-  # Se pasa la configuración del clúster privado, incluyendo el CIDR del plano de control
   private_cluster_config = {
     enable_private_endpoint = true
     enable_private_nodes    = true
-    master_ipv4_cidr_block  = data.google_compute_subnetwork.control_plane_subnet.ip_cidr_range
+    master_ipv4_cidr_block  = var.gke_master_ipv4_cidr_block
   }
+  master_authorized_networks = var.gke_master_authorized_networks
+  maintenance_policy         = var.maintenance_policy
 
   # --- Configuración del Node Pool ---
   machine_type     = var.gke_machine_type
@@ -65,6 +68,26 @@ module "gke_cluster" {
   enable_autoscaling = true
   min_node_count     = var.gke_min_node_count
   max_node_count     = var.gke_max_node_count
+  node_locations     = ["us-west2-a", "us-west2-b", "us-west2-c"]
+}
+
+# Módulo para crear la cuenta de servicio para el bastión
+module "bastion_sa" {
+  source             = "../../modules/gke_service_account"
+  project_id         = var.gcp_project_id
+  name_prefix        = "bastion-dev"
+  network_project_id = var.gke_network_project_id
+}
+
+# Módulo para crear el servidor bastión
+module "bastion_host" {
+  source                = "../../modules/bastion_host"
+  project_id            = var.gcp_project_id
+  zone                  = "us-west2-a" # O la zona que prefieras
+  network_project_id    = var.gke_network_project_id
+  network_name          = var.gke_network_name
+  subnetwork_name       = var.gke_node_pool_subnet
+  service_account_email = module.bastion_sa.email
 }
 
 # --- Recursos Adicionales ---
@@ -73,6 +96,13 @@ module "gke_cluster" {
 resource "google_project_service" "artifactregistry" {
   project            = var.gcp_project_id
   service            = "artifactregistry.googleapis.com"
+  disable_on_destroy = false
+}
+
+# Habilitar la API de Cloud Billing
+resource "google_project_service" "cloudbilling" {
+  project            = var.gcp_project_id
+  service            = "cloudbilling.googleapis.com"
   disable_on_destroy = false
 }
 
@@ -94,7 +124,7 @@ data "google_client_config" "default" {}
 # Configuramos el proveedor de Kubernetes para que se conecte al clúster GKE creado.
 # Esto nos permite gestionar recursos de Kubernetes (como PersistentVolumes) con Terraform.
 provider "kubernetes" {
-  host                   = "https://${module.gke_cluster.endpoint}"
+  host                   = "https://${module.gke_cluster.cluster_endpoint}"
   token                  = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(module.gke_cluster.cluster_ca_certificate)
 }
@@ -121,8 +151,29 @@ module "db_persistent_volume" {
   gcp_region         = var.gcp_region
   disk_name          = var.db_disk_name
   disk_type          = var.regional_disk_type
-  disk_size_gb       = var.db_disk_size_gb
+  disk_size_gb          = var.db_disk_size_gb
   disk_replica_zones = var.regional_disk_replica_zones
   pv_name            = "n8n-db-data-pv-dev"
   pv_role            = "db-data"
+}
+
+# Regla de Firewall para permitir la comunicación desde el plano de control de GKE a los nodos.
+# Esto es mandatorio para los clústeres privados.
+resource "google_compute_firewall" "gke_master_to_nodes_allow" {
+  # Esta regla debe crearse en el proyecto HOST de la Shared VPC
+  project = var.gke_network_project_id
+
+  name    = "${var.gcp_env}-gke-master-to-nodes-allow"
+  network = var.gke_network_name
+
+  # Permitir tráfico desde el CIDR del master de GKE
+  source_ranges = [var.gke_master_ipv4_cidr_block]
+
+  # Aplicar a los nodos que usan la cuenta de servicio de GKE
+  target_service_accounts = [module.gke_node_sa.email]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443", "10250"] # Puerto para Konnectivity y Kubelet
+  }
 }

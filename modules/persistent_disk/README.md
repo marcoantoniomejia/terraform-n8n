@@ -6,6 +6,8 @@ Este módulo de Terraform provisiona un **Disco Persistente Zonal (`google_compu
 
 Un disco zonal está alojado en una única zona de GCP (ej. `us-central1-a`). Es la opción adecuada para ser utilizada por recursos que viven en esa misma zona, como una única Máquina Virtual (VM). No ofrece replicación automática fuera de su zona.
 
+El disco se crea con las etiquetas `managed-by = "terraform"` y `purpose = "<disk_name>"` para una mejor gestión y seguimiento de los recursos.
+
 **Nota**: Para cargas de trabajo que requieren alta disponibilidad, como las que corren en clústeres de GKE regionales, se recomienda utilizar el módulo `regional_persistent_disk` en su lugar.
 
 ## Uso
@@ -21,6 +23,14 @@ module "mi_disco_zonal" {
   disk_size_gb = 50
 }
 ```
+
+## Archivos del Módulo
+
+- `main.tf`: Contiene la lógica principal del módulo, donde se define el recurso `google_compute_disk`.
+- `variables.tf`: Define las variables de entrada que el módulo acepta. **No modifiques este archivo para cambiar valores**. Los valores de las variables deben pasarse desde la configuración del entorno que utiliza el módulo (ej. `environments/dev/main.tf`).
+- `outputs.tf`: Define las variables de salida del módulo.
+- `README.md`: Este archivo de documentación.
+- `OWNERS`: Archivo que especifica los propietarios y responsables del módulo.
 
 ## Entradas (Inputs)
 

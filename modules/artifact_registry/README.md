@@ -20,6 +20,14 @@ module "artifact_registry" {
 }
 ```
 
+## Archivos del Módulo
+
+- `main.tf`: Contiene la lógica principal del módulo, donde se define el recurso `google_artifact_registry_repository`.
+- `variables.tf`: Define las variables de entrada que el módulo acepta. **No modifiques este archivo para cambiar valores**. Los valores de las variables deben pasarse desde la configuración del entorno que utiliza el módulo (ej. `environments/dev/main.tf`).
+- `outputs.tf`: Define las variables de salida del módulo.
+- `README.md`: Este archivo de documentación.
+- `OWNERS`: Archivo que especifica los propietarios y responsables del módulo.
+
 ## Entradas (Inputs)
 
 | Nombre            | Descripción                                    | Tipo   | Requerido |

@@ -48,6 +48,14 @@ module "gke_cluster" {
 }
 ```
 
+## Archivos del Módulo
+
+- `main.tf`: Contiene la lógica principal del módulo, donde se definen los recursos `google_container_cluster` y `google_container_node_pool`.
+- `variables.tf`: Define las variables de entrada que el módulo acepta. **No modifiques este archivo para cambiar valores**. Los valores de las variables deben pasarse desde la configuración del entorno que utiliza el módulo (ej. `environments/dev/main.tf`).
+- `outputs.tf`: Define las variables de salida del módulo.
+- `README.md`: Este archivo de documentación.
+- `OWNERS`: Archivo que especifica los propietarios y responsables del módulo.
+
 ## Entradas (Inputs)
 
 ### Configuración General
@@ -59,6 +67,7 @@ module "gke_cluster" {
 | `region`               | La región de GCP donde se desplegará el clúster.                                              | `string` |                                            |    Sí     |
 | `logging_service`      | El servicio de logging a utilizar.                                                            | `string` | `"logging.googleapis.com/kubernetes"`      |    No     |
 | `monitoring_service`   | El servicio de monitoreo a utilizar.                                                          | `string` | `"monitoring.googleapis.com/kubernetes"`   |    No     |
+| `maintenance_policy`   | Objeto de configuración para la política de mantenimiento del clúster.                        | `object` | `null`                                     |    No     |
 
 ### Configuración de Red
 
@@ -68,6 +77,7 @@ module "gke_cluster" {
 | `subnetwork_name`      | El nombre de la subred para los nodos del clúster.                                                      | `string` |             |    Sí     |
 | `network_project_id`   | El ID del proyecto Host de la VPC compartida. Si es nulo, se asume que la red está en el mismo proyecto. | `string` | `null`      |    No     |
 | `private_cluster_config` | Objeto de configuración para un clúster privado. Si es nulo, el clúster será público.                  | `object` | `null`      |    No     |
+| `master_authorized_networks` | Lista de bloques CIDR autorizados para acceder al master de GKE.                                  | `list(object)` | `[]`        |    No     |
 
 ### Configuración del Pool de Nodos
 
@@ -90,7 +100,8 @@ module "gke_cluster" {
 
 ## Salidas (Outputs)
 
-| Nombre             | Descripción                             |
-| ------------------ | --------------------------------------- |
-| `cluster_name`     | El nombre del clúster de GKE creado.    |
-| `cluster_endpoint` | El endpoint del plano de control del clúster. |
+| Nombre                   | Descripción                                         |
+| ------------------------ | --------------------------------------------------- |
+| `cluster_name`           | El nombre del clúster de GKE creado.                |
+| `cluster_endpoint`       | El endpoint del plano de control del clúster.       |
+| `cluster_ca_certificate` | El certificado de autoridad del clúster (CA).       |

@@ -26,6 +26,14 @@ module "network" {
 }
 ```
 
+## Archivos del Módulo
+
+- `main.tf`: Contiene la lógica principal del módulo. Actualmente está vacío.
+- `variables.tf`: Define las variables de entrada que el módulo acepta. Actualmente está vacío.
+- `outputs.tf`: Define las variables de salida del módulo. Actualmente está vacío.
+- `README.md`: Este archivo de documentación.
+- `OWNERS`: Archivo que especifica los propietarios y responsables del módulo.
+
 ## Entradas (Inputs)
 
 *No hay variables de entrada definidas actualmente.*
